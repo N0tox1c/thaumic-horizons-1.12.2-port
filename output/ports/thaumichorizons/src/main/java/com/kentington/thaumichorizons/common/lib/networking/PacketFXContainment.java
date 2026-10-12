@@ -1,0 +1,56 @@
+//
+// Decompiled by Procyon v0.5.30
+//
+
+package com.kentington.thaumichorizons.common.lib.networking;
+
+import net.minecraft.client.Minecraft;
+
+import com.kentington.thaumichorizons.client.fx.FXContainment;
+
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
+import thaumcraft.client.fx.ParticleEngine;
+
+public class PacketFXContainment implements IMessage, IMessageHandler<PacketFXContainment, IMessage> {
+
+    double x;
+    double y;
+    double z;
+
+    public PacketFXContainment() {}
+
+    public PacketFXContainment(final double x, final double y, final double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public IMessage onMessage(final PacketFXContainment message, final MessageContext ctx) {
+        com.kentington.thaumichorizons.common.ThaumicHorizons.proxy.scheduleClientPacket(() -> applyClient(message));
+        return null;
+    }
+
+    @net.minecraftforge.fml.relauncher.SideOnly(net.minecraftforge.fml.relauncher.Side.CLIENT)
+    private void applyClient(final PacketFXContainment message) {
+        final FXContainment fb = new FXContainment(Minecraft.getMinecraft().world, message.x, message.y, message.z);
+        ParticleEngine.instance.addEffect(Minecraft.getMinecraft().world, fb);
+        return;
+    }
+
+    public void fromBytes(final ByteBuf buf) {
+        this.x = buf.readDouble();
+        this.y = buf.readDouble();
+        this.z = buf.readDouble();
+    }
+
+    public void toBytes(final ByteBuf buf) {
+        buf.writeDouble(this.x);
+        buf.writeDouble(this.y);
+        buf.writeDouble(this.z);
+    }
+}

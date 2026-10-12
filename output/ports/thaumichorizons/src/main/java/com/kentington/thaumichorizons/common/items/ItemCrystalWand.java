@@ -1,0 +1,39 @@
+//
+// Decompiled by Procyon v0.5.30
+//
+
+package com.kentington.thaumichorizons.common.items;
+
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+
+import com.kentington.thaumichorizons.common.ThaumicHorizons;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+public class ItemCrystalWand extends Item  implements com.kentington.thaumichorizons.common.lib.OriginalItemAppearance , com.kentington.thaumichorizons.common.lib.OriginalTextureProvider {
+
+    public TextureAtlasSprite icon;
+
+    public ItemCrystalWand() {
+        this.setMaxStackSize(1);
+        this.setCreativeTab(ThaumicHorizons.tabTH);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(final TextureMap ir) {
+        this.icon = ir.registerSprite(com.kentington.thaumichorizons.client.LegacyTextureRegistration.sprite("thaumichorizons:crystalwand", "items"));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public TextureAtlasSprite getIconFromDamage(final int par1) {
+        return this.icon;
+    }
+
+    public String getTranslationKey(final ItemStack par1ItemStack) {
+        return "item.crystalWand";
+    }
+}

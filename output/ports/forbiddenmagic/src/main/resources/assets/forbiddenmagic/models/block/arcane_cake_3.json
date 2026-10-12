@@ -1,0 +1,63 @@
+{
+  "textures": {
+    "side": "forbidden:blocks/cake_side",
+    "inside": "forbidden:blocks/cake_inner",
+    "top": "forbidden:blocks/cake_top",
+    "bottom": "forbidden:blocks/cake_bottom",
+    "particle": "forbidden:blocks/cake_side"
+  },
+  "elements": [
+    {
+      "from": [
+        5.33333,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#inside"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.625,
+        0.625,
+        0.625
+      ]
+    }
+  }
+}

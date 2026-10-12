@@ -1,0 +1,48 @@
+//
+// Decompiled by Procyon v0.5.30
+//
+
+package com.kentington.thaumichorizons.common.entities.ai;
+
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAITarget;
+
+import com.kentington.thaumichorizons.common.lib.EntityInfusionProperties;
+
+public class EntityAIOwnerHurtByTargetTH extends EntityAITarget {
+
+    EntityLiving theDefendingTameable;
+    EntityLivingBase theOwnerAttacker;
+    private int field_142051_e;
+
+    public EntityAIOwnerHurtByTargetTH(final EntityLiving p_i1667_1_) {
+        super((EntityCreature) p_i1667_1_, false);
+        this.theDefendingTameable = p_i1667_1_;
+        this.setMutexBits(1);
+    }
+
+    public boolean shouldExecute() {
+        final EntityInfusionProperties prop = (EntityInfusionProperties) com.kentington.thaumichorizons.common.lib.InfusionCapability.get(this.theDefendingTameable);
+        final EntityLivingBase entitylivingbase = this.theDefendingTameable.world
+                .getPlayerEntityByName(prop.getOwner());
+        if (entitylivingbase == null) {
+            return false;
+        }
+        this.theOwnerAttacker = entitylivingbase.getRevengeTarget();
+        final int i = entitylivingbase.getRevengeTimer();
+        return i != this.field_142051_e && this.isSuitableTarget(this.theOwnerAttacker, false);
+    }
+
+    public void startExecuting() {
+        this.taskOwner.setAttackTarget(this.theOwnerAttacker);
+        final EntityInfusionProperties prop = (EntityInfusionProperties) com.kentington.thaumichorizons.common.lib.InfusionCapability.get(this.theDefendingTameable);
+        final EntityLivingBase entitylivingbase = this.theDefendingTameable.world
+                .getPlayerEntityByName(prop.getOwner());
+        if (entitylivingbase != null) {
+            this.field_142051_e = entitylivingbase.getRevengeTimer();
+        }
+        super.startExecuting();
+    }
+}

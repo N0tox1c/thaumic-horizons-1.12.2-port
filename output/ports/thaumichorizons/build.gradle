@@ -1,0 +1,75 @@
+// Full-source port: all original files stay in src/; no exclusion hacks.
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.minecraftforge.net/' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+    dependencies { classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT' }
+}
+repositories { maven { url uri('../../../local-maven') } }
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = '0.0.1-port-in-progress'
+group = 'classic.thaumcraft.ports'
+archivesBaseName = 'ThaumicHorizons'
+sourceCompatibility = targetCompatibility = '1.8'
+tasks.withType(JavaCompile) { options.encoding='UTF-8'; options.compilerArgs += ['-Xmaxerrs', '10000'] }
+minecraft {
+    version = '1.12.2-14.23.5.2847'
+    mappings = 'stable_39'
+    runDir = 'run'
+}
+repositories {
+    mavenCentral()
+    maven { url 'https://www.cursemaven.com' }
+}
+dependencies {
+    // Complete TC4 DEV binary is required because originals reference thaumcraft.common.*.
+    // These dependencies are provided by the running game and MUST NOT be shaded.
+    provided files('libs/Thaumcraft-dev.jar')
+    provided files('libs/Thaumcraft-api.jar')
+    provided files('libs/Baubles-1.12.2.jar')
+    // Original optional integrations (Botania, Blood Magic, etc) need actual 1.12.2 APIs.
+    // Missing references are tracked in migration-report.json, NOT silently removed.
+    testCompile 'junit:junit:4.12'
+}
+processResources {
+    eachFile { details ->
+        if (details.path.startsWith('assets/')) details.path = details.path.toLowerCase(java.util.Locale.ROOT)
+    }
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand version: project.version, mcversion: project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) { exclude 'mcmod.info' }
+}
+jar { classifier='universal' }
+reobf { jar {} }
+
+// Enables focused behavioral tests against the actual Forge SDK while the full
+// source migration is in progress. It does not change main source selection.
+task writeVerificationClasspath {
+    doLast {
+        def target = file('../../../verification/forge-test-classpath.txt')
+        target.parentFile.mkdirs()
+        target.text = sourceSets.test.compileClasspath.asPath
+    }
+}
+
+// Optional isolated runtime test mod. Its classes are never part of the TH jar.
+sourceSets {
+    verificationProbe {
+        java.srcDir '../../../verification/runtime-probe/src'
+        compileClasspath = sourceSets.main.output + sourceSets.main.compileClasspath
+    }
+}
+task verificationProbeJar(type: Jar) {
+    dependsOn verificationProbeClasses
+    baseName = 'THVerificationProbe'
+    classifier = 'verification'
+    from sourceSets.verificationProbe.output
+}
+reobf { verificationProbeJar { classpath = sourceSets.verificationProbe.compileClasspath } }

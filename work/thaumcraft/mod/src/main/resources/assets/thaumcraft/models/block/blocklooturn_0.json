@@ -1,0 +1,7 @@
+{
+  "parent": "thaumcraft:block/loot_urn",
+  "textures": {
+    "side": "thaumcraft:blocks/urn_side_0",
+    "top": "thaumcraft:blocks/urn_top"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "variants": {
+    "type=0": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=1": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=2": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=3": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=4": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=5": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=6": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=7": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=8": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=9": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    },
+    "type=10": {
+      "model": "thaumichorizons:block/vat_glass_base"
+    }
+  }
+}

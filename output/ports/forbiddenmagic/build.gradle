@@ -1,0 +1,53 @@
+// Full-source port: all original files stay in src/; no exclusion hacks.
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.minecraftforge.net/' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+    dependencies { classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT' }
+}
+repositories { maven { url uri('../../../local-maven') } }
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = '0.0.1-compilation-stabilization'
+group = 'classic.thaumcraft.ports'
+archivesBaseName = 'ForbiddenMagic'
+sourceCompatibility = targetCompatibility = '1.8'
+tasks.withType(JavaCompile) { options.encoding='UTF-8'; options.compilerArgs += ['-Xmaxerrs', '1000'] }
+minecraft {
+    version = '1.12.2-14.23.5.2847'
+    mappings = 'stable_39'
+    runDir = 'run'
+}
+repositories {
+    mavenCentral()
+    maven { url 'https://www.cursemaven.com' }
+}
+dependencies {
+    // Complete TC4 DEV binary is required because originals reference thaumcraft.common.*.
+    // These dependencies are provided by the running game and MUST NOT be shaded.
+    provided files('libs/Thaumcraft-dev.jar')
+    provided files('libs/Thaumcraft-api.jar')
+    provided files('libs/Baubles-1.12.2.jar')
+    provided files('libs/ProjectE-1.12.2-PE1.4.1.jar')
+    provided files('libs/BloodMagic-1.12.2-2.4.3-105.jar')
+    provided files('libs/Botania-1.12.2-dev.jar')
+    // Original optional integrations (Botania, Blood Magic, etc) need actual 1.12.2 APIs.
+    // Missing references are tracked in migration-report.json, NOT silently removed.
+    testCompile 'junit:junit:4.12'
+}
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand version: project.version, mcversion: project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) { exclude 'mcmod.info' }
+}
+jar { classifier='universal'; from(sourceSets.api.output) { include 'fox/spiteful/forbidden/compat/**' } }
+reobf { jar {} }
+
+// Compile main code against the real runtime Botania API first. Original API sources still compile in full.
+sourceSets.main.compileClasspath = files('libs/Botania-1.12.2-dev.jar') + sourceSets.main.compileClasspath

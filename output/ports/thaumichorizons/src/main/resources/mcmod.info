@@ -1,0 +1,22 @@
+[
+  {
+    "modid": "thaumichorizons",
+    "name": "Thaumic Horizons",
+    "description": "Pushing the boundaries of magic",
+    "version": "0.0.1-fullsource-port",
+    "mcversion": "1.12.2",
+    "logoFile": "logo.png",
+    "url": "",
+    "updateUrl": "",
+    "authors": [
+      "Kentington"
+    ],
+    "credits": "",
+    "parent": "",
+    "screenshots": [],
+    "dependencies": [
+      "thaumcraft",
+      "baubles"
+    ]
+  }
+]

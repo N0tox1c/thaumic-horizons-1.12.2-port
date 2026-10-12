@@ -1,0 +1,53 @@
+//
+// Decompiled by Procyon v0.5.30
+//
+
+package com.kentington.thaumichorizons.client.renderer.tile;
+
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
+
+import org.lwjgl.opengl.GL11;
+
+import com.kentington.thaumichorizons.client.renderer.model.ModelSoulSieve;
+import com.kentington.thaumichorizons.common.tiles.TileSoulExtractor;
+
+import thaumcraft.client.lib.UtilsFX;
+
+public class TileSoulSieveRender extends TileEntitySpecialRenderer {
+    @Override
+    public void render(net.minecraft.tileentity.TileEntity tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        renderTileEntityAt(tile, x, y, z, partialTicks);
+    }
+
+
+    static String tx1;
+    private final ModelSoulSieve model;
+
+    public TileSoulSieveRender() {
+        this.model = new ModelSoulSieve();
+    }
+
+    public void renderTileEntityAt(final TileEntity te, final double x, final double y, final double z, final float f) {
+        final TileSoulExtractor tco = (TileSoulExtractor) te;
+        GL11.glPushMatrix();
+        GL11.glTranslatef((float) x + 0.5f, (float) y + 1.5f, (float) z + 0.5f);
+        GL11.glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
+        UtilsFX.bindTexture(new net.minecraft.util.ResourceLocation("thaumichorizons".toLowerCase(java.util.Locale.ROOT), TileSoulSieveRender.tx1));
+        this.model.render(
+                null,
+                0.0f,
+                0.0f,
+                0.0f,
+                0.0f,
+                0.0f,
+                0.0625f,
+                0.15625f * (float) (Math.cos(Math.toRadians(tco.sieveMotion)) - 1.0),
+                tco.ticksLeft);
+        GL11.glPopMatrix();
+    }
+
+    static {
+        TileSoulSieveRender.tx1 = "textures/models/soulsieve.png";
+    }
+}

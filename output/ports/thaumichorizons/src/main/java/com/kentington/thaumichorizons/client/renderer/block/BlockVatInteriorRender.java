@@ -1,0 +1,33 @@
+//
+// Decompiled by Procyon v0.5.30
+//
+
+package com.kentington.thaumichorizons.client.renderer.block;
+
+import net.minecraft.block.Block;
+
+import net.minecraft.world.IBlockAccess;
+
+import com.kentington.thaumichorizons.common.ThaumicHorizons;
+
+
+
+
+public class BlockVatInteriorRender extends BlockRenderer {
+
+    public void renderInventoryBlock(final Block block, final int metadata, final int modelId,
+            final NativeBlockMesh renderer) {}
+
+    public boolean renderWorldBlock(final IBlockAccess world, final int x, final int y, final int z, final Block block,
+            final int modelId, final NativeBlockMesh renderer) {
+        return false;
+    }
+
+    public boolean shouldRender3DInInventory(final int modelId) {
+        return false;
+    }
+
+    public int getRenderId() {
+        return ThaumicHorizons.blockVatInteriorRI;
+    }
+}

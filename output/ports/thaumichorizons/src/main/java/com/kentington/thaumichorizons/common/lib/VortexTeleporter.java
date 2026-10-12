@@ -1,0 +1,35 @@
+//
+// Decompiled by Procyon v0.5.30
+//
+
+package com.kentington.thaumichorizons.common.lib;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.world.Teleporter;
+import net.minecraft.world.WorldServer;
+
+import com.kentington.thaumichorizons.common.ThaumicHorizons;
+
+public class VortexTeleporter extends Teleporter {
+
+    private final WorldServer worldServerInstance;
+    private final int planeNum;
+
+    public VortexTeleporter(final WorldServer p_i1963_1_, final int num) {
+        super(p_i1963_1_);
+        this.worldServerInstance = p_i1963_1_;
+        this.planeNum = num;
+    }
+
+    public void placeInPortal(final Entity p_77185_1_, final double p_77185_2_, final double p_77185_4_,
+            final double p_77185_6_, final float p_77185_8_) {
+        if (this.worldServerInstance.provider.getDimension() == ThaumicHorizons.dimensionPocketId) {
+            p_77185_1_.setPosition(0.5, 129.0, 256 * this.planeNum + 0.5f);
+        } else {
+            p_77185_1_.setPosition(
+                    PocketPlaneData.positions.get(this.planeNum).x,
+                    PocketPlaneData.positions.get(this.planeNum).y,
+                    PocketPlaneData.positions.get(this.planeNum).z);
+        }
+    }
+}

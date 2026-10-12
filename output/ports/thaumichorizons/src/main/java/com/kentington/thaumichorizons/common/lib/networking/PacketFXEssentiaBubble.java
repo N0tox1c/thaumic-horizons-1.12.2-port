@@ -1,0 +1,71 @@
+//
+// Decompiled by Procyon v0.5.30
+//
+
+package com.kentington.thaumichorizons.common.lib.networking;
+
+import net.minecraft.client.Minecraft;
+
+import com.kentington.thaumichorizons.client.fx.FXEssentiaBubble;
+
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
+import thaumcraft.client.fx.ParticleEngine;
+
+public class PacketFXEssentiaBubble implements IMessage, IMessageHandler<PacketFXEssentiaBubble, IMessage> {
+
+    double x;
+    double y;
+    double z;
+    int color;
+
+    public PacketFXEssentiaBubble() {}
+
+    public PacketFXEssentiaBubble(final double x, final double y, final double z, final int color) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.color = color;
+    }
+
+    public IMessage onMessage(final PacketFXEssentiaBubble message, final MessageContext ctx) {
+        com.kentington.thaumichorizons.common.ThaumicHorizons.proxy.scheduleClientPacket(() -> applyClient(message));
+        return null;
+    }
+
+    @net.minecraftforge.fml.relauncher.SideOnly(net.minecraftforge.fml.relauncher.Side.CLIENT)
+    private void applyClient(final PacketFXEssentiaBubble message) {
+        for (int i = 0; i < 10; ++i) {
+            final FXEssentiaBubble fb = new FXEssentiaBubble(
+                    Minecraft.getMinecraft().world,
+                    message.x + 1.5f * (Minecraft.getMinecraft().world.rand.nextFloat() - 0.5f),
+                    message.y,
+                    message.z + 1.5f * (Minecraft.getMinecraft().world.rand.nextFloat() - 0.5f),
+                    Minecraft.getMinecraft().player.ticksExisted,
+                    message.color,
+                    0.3f,
+                    i * 2 + 2);
+            fb.setNoClip(true);
+            ParticleEngine.instance.addEffect(Minecraft.getMinecraft().world, fb);
+        }
+        return;
+    }
+
+    public void fromBytes(final ByteBuf buf) {
+        this.x = buf.readDouble();
+        this.y = buf.readDouble();
+        this.z = buf.readDouble();
+        this.color = buf.readInt();
+    }
+
+    public void toBytes(final ByteBuf buf) {
+        buf.writeDouble(this.x);
+        buf.writeDouble(this.y);
+        buf.writeDouble(this.z);
+        buf.writeInt(this.color);
+    }
+}
